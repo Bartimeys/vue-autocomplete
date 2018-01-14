@@ -1,11 +1,17 @@
 <template>
   <div>
     <autocomplete :data="myOptions" v-model="selected"></autocomplete>
-    <p v-for="i in myOptions">{{i.title}}</p>
+    <section v-for="i in myOptions" v-bind:key="i.title">
+      <ul>
+        <li>{{i.title}}</li>
+        <li><img :src="i.thumbnail" :alt="i.title"/></li>
+        <li>{{i.description}}</li>
+      </ul>
+    </section>
   </div>
 </template>
 <script>
-import Autocomplete from './Autocomplete'
+import Autocomplete from './Autocomplete/Autocomplete'
 export default {
   name: 'Basic',
   components: {
