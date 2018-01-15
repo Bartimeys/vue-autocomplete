@@ -56,13 +56,6 @@ export default {
       selected: ''
     }
   },
-  filters: {
-    capitalize: function (value) {
-      if (!value) return ''
-      value = value.toString()
-      return value.charAt(0).toUpperCase() + value.slice(1)
-    }
-  },
   methods: {
     filterByName: function () {
       let result = this.myOptions.filter(o => o.title === this.selected)
