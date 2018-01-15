@@ -1,10 +1,13 @@
 <template>
   <div>
 
-    <input :placeholder="placeholder" class="autocomplete" v-model="typed" @blur="verificaBlur($event)"  v-on:submit.prevent="verificaBlur($event)">
+    <input :placeholder="placeholder" class="autocomplete" v-model="typed" @blur="verificaBlur($event)" @keydown.enter = 'enter'
+           @keydown.down = 'down'
+           @keydown.up = 'up'
+           @input = 'change'>
     <ul class="autocompleteList" v-if="showResult">
       <li v-if="noneFind" id="autocompleteNoResult">{{ noresults }}</li>
-      <li class="autocompleteItemsList" v-for="result in results" v-bind:key="result" @click="select(result)" @keyup="select(result)" @keydown="select(result)">
+      <li class="autocompleteItemsList" v-for="result in results" v-bind:key="result" @click="select(result)">
         {{ result }}
       </li>
     </ul>
@@ -39,7 +42,9 @@ export default {
       typed: '',
       showResult: false,
       noneFind: false,
-      results: ''
+      results: '',
+      current: 0,
+      open: false
     }
   },
   watch: {
@@ -63,7 +68,57 @@ export default {
       }
     }
   },
+  computed: {
+    // Filtering the suggestion based on the input
+    matches () {
+      debugger
+      return this.results.filter((str) => {
+        return str.indexOf(this.typed) >= 0
+      })
+    },
+
+    // The flag
+    openSuggestion () {
+      return this.typed !== '' &&
+        this.matches.length !== 0 &&
+        this.open === true
+    }
+  },
   methods: {
+    enter () {
+      this.typed = this.matches[this.current]
+      this.open = false
+    },
+
+    // When up pressed while suggestions are open
+    up () {
+      if (this.current > 0) {
+        this.current--
+      }
+    },
+
+    // When up pressed while suggestions are open
+    down () {
+      if (this.current < this.matches.length - 1) {
+        this.current++
+      }
+    },
+    // For highlighting element
+    isActive (index) {
+      return index === this.current
+    },
+    // When the user changes input
+    change () {
+      if (this.open === false) {
+        this.open = true
+        this.current = 0
+      }
+    },
+    // When one of the suggestion is clicked
+    suggestionClick (index) {
+      this.typed = this.matches[index]
+      this.open = false
+    },
     filterData () {
       let reg = new RegExp(this.typed.split('').join('\\w*').replace(/\W/, ''), 'i')
       let map = this.data.map(x => x.title)
