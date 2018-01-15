@@ -59,7 +59,6 @@ export default {
   methods: {
     filterByName: function () {
       let result = this.myOptions.filter(o => o.title === this.selected)
-      console.log(result)
       return result
     }
   }
