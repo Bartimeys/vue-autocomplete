@@ -1,14 +1,21 @@
 <template>
   <div>
     <autocomplete :data="myOptions" v-model="selected"></autocomplete>
-    <section v-for="i in myOptions" v-bind:key="i.title">
-      <ul>
-        <li>{{i.title}}</li>
-        <li><img :src="i.thumbnail" :alt="i.title"/></li>
-        <li>{{i.description}}</li>
-      </ul>
-    </section>
-  </div>
+    <ul class="list">
+      <li v-for="i in myOptions" v-bind:key="i.title" v-if="i.title === selected ">
+          <a href="#"><img :src="i.thumbnail" :alt="i.title"/>
+          <h1>{{i.title}}</h1>
+          <p>{{i.description}}</p>
+        </a>
+      </li>
+      <li v-for="i in myOptions" v-bind:key="i.title" class="list" v-show="selected === ''">
+      <a href="#"><img :src="i.thumbnail" :alt="i.title"/>
+        <h1>{{i.title}}</h1>
+        <p>{{i.description}}</p>
+      </a>
+    </li>
+    </ul>
+    </div>
 </template>
 <script>
 import Autocomplete from './Autocomplete/Autocomplete'
@@ -25,7 +32,15 @@ export default {
           description: 'lorem ipsum dolor amet.',
           thumbnail: 'http://lorempicsum.com/nemo/200/200/1'
         }, {
+          title: 'First Scene 2',
+          description: 'lorem ipsum dolor amet.',
+          thumbnail: 'http://lorempicsum.com/nemo/200/200/1'
+        }, {
           title: 'Second Scene',
+          description: 'lorem ipsum dolor amet.',
+          thumbnail: 'http://lorempicsum.com/nemo/200/200/2'
+        }, {
+          title: 'Second Scene 2',
           description: 'lorem ipsum dolor amet.',
           thumbnail: 'http://lorempicsum.com/nemo/200/200/2'
         }, {
@@ -40,6 +55,23 @@ export default {
       ],
       selected: ''
     }
+  },
+  filters: {
+    capitalize: function (value) {
+      if (!value) return ''
+      value = value.toString()
+      return value.charAt(0).toUpperCase() + value.slice(1)
+    }
+  },
+  methods: {
+    filterByName: function () {
+      let result = this.myOptions.filter(o => o.title === this.selected)
+      console.log(result)
+      return result
+    }
   }
 }
 </script>
+<style lang="css">
+  @import 'style.css';
+</style>

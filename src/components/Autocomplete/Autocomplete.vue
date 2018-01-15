@@ -1,10 +1,12 @@
 <template>
   <div>
 
-    <input :placeholder="placeholder" class="autocomplete" v-model="typed" @blur="verificaBlur($event)">
+    <input :placeholder="placeholder" class="autocomplete" v-model="typed" @blur="verificaBlur($event)"  v-on:submit.prevent="verificaBlur($event)">
     <ul class="autocompleteList" v-if="showResult">
       <li v-if="noneFind" id="autocompleteNoResult">{{ noresults }}</li>
-      <li class="autocompleteItemsList" v-for="result in results" @click="select(result)">{{ result }}</li>
+      <li class="autocompleteItemsList" v-for="result in results" v-bind:key="result" @click="select(result)" @keyup="select(result)" @keydown="select(result)">
+        {{ result }}
+      </li>
     </ul>
   </div>
 </template>
@@ -21,7 +23,7 @@ export default {
     },
     minlength: {
       type: Number,
-      default: 3
+      default: 2
     },
     noresults: {
       type: String,
@@ -45,7 +47,10 @@ export default {
       if (this.typed.length >= this.minlength) {
         let verifier = this.typed
         let mapVerify = this.data.map(x => x.title)
-        let verify = mapVerify.filter(function (elem) {
+        let uniqueArray3 = mapVerify.filter(function (elem, index, self) {
+          return index === self.indexOf(elem)
+        })
+        let verify = uniqueArray3.filter(function (elem) {
           return elem === verifier
         })
         if (verify.length === 0) {
@@ -62,7 +67,10 @@ export default {
     filterData () {
       let reg = new RegExp(this.typed.split('').join('\\w*').replace(/\W/, ''), 'i')
       let map = this.data.map(x => x.title)
-      let result = map.filter(function (elem) {
+      let uniqueArray = map.filter(function (elem, index, self) {
+        return index === self.indexOf(elem)
+      })
+      let result = uniqueArray.filter(function (elem) {
         if (elem.match(reg)) {
           return elem
         }
@@ -71,8 +79,6 @@ export default {
       this.showResult = true
       if (result.length === 0) {
         this.noneFind = true
-      } else {
-        this.noneFind = false
       }
     },
     select (result) {
@@ -85,18 +91,21 @@ export default {
       setTimeout(function () {
         let verificador = self.typed
         let mapBlur = self.data.map(x => x.title)
-        let verify = mapBlur.filter(function (elem) {
+        let uniqueArray2 = mapBlur.filter(function (elem, index, self) {
+          return index === self.indexOf(elem)
+        })
+        let verify = uniqueArray2.filter(function (elem) {
           return elem === verificador
         })
         if (verify.length === 0) {
           self.typed = ''
           self.$emit('input', self.typed)
         }
-      }, 260)
+      }, 500)
     }
   }
 }
 </script>
 <style lang="css">
-@import 'autocomplete.css';
+  @import 'autocomplete.css';
 </style>

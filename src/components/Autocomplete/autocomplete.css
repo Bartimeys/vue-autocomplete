@@ -27,12 +27,11 @@
   padding: 0;
   font-size: 14px;
   font-family: Helvetica, sans-serif;
-  /*padding: 12px;*/
 }
 .autocompleteItemsList {
   margin: 0;
-  padding: 5px;
-  cursor: default;
+  padding: 1em;
+  cursor: pointer;
 }
 .autocompleteItemsList:hover {
   background-color: #eef4ff;
@@ -41,3 +40,4 @@
 #autocompleteNoResult {
   color: #bbbbbb;
 }
+
